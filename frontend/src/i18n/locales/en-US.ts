@@ -3067,6 +3067,9 @@ export default {
       knowledgeGraphExtract: 'Knowledge Graph Extraction',
       thinking: 'Thinking',
       imageAnalysis: 'Image Analysis',
+      docInstruction: 'Apply Document Instruction',
+      docExtract: 'Extract Document Info',
+      docFillTable: 'Auto-fill Table',
     },
     summary: {
       searchKb: 'Searched knowledge base <strong>{count}</strong> time(s)',

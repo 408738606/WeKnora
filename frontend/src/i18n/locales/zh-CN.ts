@@ -3065,6 +3065,9 @@ export default {
       knowledgeGraphExtract: "知识图谱抽取",
       thinking: "思考",
       imageAnalysis: "查看图片内容",
+      docInstruction: "文档指令执行",
+      docExtract: "文档信息提取",
+      docFillTable: "表格自动填写",
     },
     summary: {
       searchKb: "检索知识库 <strong>{count}</strong> 次",
