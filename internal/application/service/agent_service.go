@@ -407,6 +407,18 @@ func (s *agentService) registerTools(
 		case tools.ToolFinalAnswer:
 			toolToRegister = tools.NewFinalAnswerTool()
 			logger.Infof(ctx, "Registered final_answer tool")
+
+		case tools.ToolDocInstruction:
+			toolToRegister = tools.NewDocInstructionTool(chatModel)
+			logger.Infof(ctx, "Registered doc_instruction tool")
+
+		case tools.ToolDocExtract:
+			toolToRegister = tools.NewDocExtractTool(chatModel)
+			logger.Infof(ctx, "Registered doc_extract tool")
+
+		case tools.ToolDocFillTable:
+			toolToRegister = tools.NewDocFillTableTool(chatModel)
+			logger.Infof(ctx, "Registered doc_fill_table tool")
 		default:
 			logger.Warnf(ctx, "Unknown tool: %s", toolName)
 		}

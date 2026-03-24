@@ -72,6 +72,27 @@
       v-else-if="displayType === 'grep_results'"
       :data="toolData as GrepResultsData"
     />
+
+    <!-- Document Intelligence: NL instruction -->
+    <DocIntelligence
+      v-else-if="displayType === 'doc_instruction'"
+      :display-type="'doc_instruction'"
+      :data="toolData as DocInstructionData"
+    />
+
+    <!-- Document Intelligence: field extraction -->
+    <DocIntelligence
+      v-else-if="displayType === 'doc_extract'"
+      :display-type="'doc_extract'"
+      :data="toolData as DocExtractData"
+    />
+
+    <!-- Document Intelligence: table fill -->
+    <DocIntelligence
+      v-else-if="displayType === 'doc_fill_table'"
+      :display-type="'doc_fill_table'"
+      :data="toolData as DocFillTableData"
+    />
     
     <!-- Fallback: Display raw output -->
     <div v-else class="fallback-output">
@@ -100,7 +121,10 @@ import type {
   DatabaseQueryData,
   WebSearchResultsData,
   WebFetchResultsData,
-  GrepResultsData
+  GrepResultsData,
+  DocInstructionData,
+  DocExtractData,
+  DocFillTableData,
 } from '@/types/tool-results';
 
 import SearchResults from './tool-results/SearchResults.vue';
@@ -115,6 +139,7 @@ import DatabaseQuery from './tool-results/DatabaseQuery.vue';
 import WebSearchResults from './tool-results/WebSearchResults.vue';
 import WebFetchResults from './tool-results/WebFetchResults.vue';
 import GrepResults from './tool-results/GrepResults.vue';
+import DocIntelligence from './tool-results/DocIntelligence.vue';
 
 interface Props {
   displayType?: DisplayType;

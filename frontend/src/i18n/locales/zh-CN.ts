@@ -394,6 +394,23 @@ export default {
     imageTypeSizeError: "仅支持 JPG/PNG/GIF/WEBP 格式，单张不超过 10MB",
     imageUploadTooltip: "上传图片（支持粘贴/拖拽）",
   },
+  docIntel: {
+    instructionTitle: "文档指令执行结果",
+    instruction: "指令",
+    originalContent: "原始内容",
+    resultContent: "执行结果",
+    copyResult: "复制结果",
+    extractTitle: "文档信息提取结果",
+    fieldName: "字段名",
+    fieldValue: "提取值",
+    noFieldsExtracted: "未提取到任何字段",
+    copyJSON: "复制 JSON",
+    fillTableTitle: "表格填写结果",
+    accuracy: "准确率",
+    emptyCell: "（空）",
+    noFieldsFilled: "未填写任何字段",
+    downloadCSV: "下载 CSV",
+  },
   settings: {
     title: "设置",
     modelConfig: "模型配置",
@@ -963,6 +980,7 @@ export default {
     remove: "移除",
     defaultUser: "用户",
     copyFailed: "复制失败",
+    copySuccess: "已复制到剪贴板",
     retry: "重试",
   },
   mentionDetail: {
@@ -2968,6 +2986,9 @@ export default {
     queryKnowledgeGraph: "查询知识图谱",
     think: "深度思考",
     todoWrite: "制定计划",
+    docInstruction: "文档指令执行",
+    docExtract: "文档信息提取",
+    docFillTable: "表格自动填写",
   },
   kbSettings: {
     storage: {
