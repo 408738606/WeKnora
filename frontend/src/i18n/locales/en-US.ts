@@ -1117,6 +1117,7 @@ export default {
     remove: 'Remove',
     defaultUser: 'User',
     copyFailed: 'Copy failed',
+    copySuccess: 'Copied to clipboard',
     retry: 'Retry',
   },
   mentionDetail: {
@@ -1791,6 +1792,23 @@ export default {
     imageTooMany: 'Maximum 5 images allowed',
     imageTypeSizeError: 'Only JPG/PNG/GIF/WEBP under 10MB supported',
     imageUploadTooltip: 'Upload image (paste/drop supported)',
+  },
+  docIntel: {
+    instructionTitle: 'Document Instruction Result',
+    instruction: 'Instruction',
+    originalContent: 'Original Content',
+    resultContent: 'Result',
+    copyResult: 'Copy Result',
+    extractTitle: 'Document Extraction Result',
+    fieldName: 'Field',
+    fieldValue: 'Extracted Value',
+    noFieldsExtracted: 'No fields extracted',
+    copyJSON: 'Copy JSON',
+    fillTableTitle: 'Table Fill Result',
+    accuracy: 'Accuracy',
+    emptyCell: '(empty)',
+    noFieldsFilled: 'No fields filled',
+    downloadCSV: 'Download CSV',
   },
   tenant: {
     title: 'Tenant Information',
@@ -2970,6 +2988,9 @@ export default {
     queryKnowledgeGraph: 'Query Knowledge Graph',
     think: 'Deep Thinking',
     todoWrite: 'Make Plan',
+    docInstruction: 'Apply Document Instruction',
+    docExtract: 'Extract Document Info',
+    docFillTable: 'Auto-fill Table',
   },
   kbSettings: {
     storage: {
@@ -3046,6 +3067,9 @@ export default {
       knowledgeGraphExtract: 'Knowledge Graph Extraction',
       thinking: 'Thinking',
       imageAnalysis: 'Image Analysis',
+      docInstruction: 'Apply Document Instruction',
+      docExtract: 'Extract Document Info',
+      docFillTable: 'Auto-fill Table',
     },
     summary: {
       searchKb: 'Searched knowledge base <strong>{count}</strong> time(s)',

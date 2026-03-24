@@ -20,7 +20,10 @@ export type DisplayType =
     | 'database_query'
     | 'web_search_results'
     | 'web_fetch_results'
-    | 'grep_results';
+    | 'grep_results'
+    | 'doc_instruction'
+    | 'doc_extract'
+    | 'doc_fill_table';
 
 // Search result item
 export interface SearchResultItem {
@@ -216,6 +219,37 @@ export interface GrepResultsData {
     max_results: number;
 }
 
+// ─── Document Intelligence tool result types ─────────────────────────────────
+
+/** A single extracted or filled field. */
+export interface DocField {
+    name: string;
+    value: string;
+}
+
+/** doc_instruction tool result: NL edit/transform applied to content. */
+export interface DocInstructionData {
+    display_type: 'doc_instruction';
+    instruction: string;
+    original_content: string;
+    result_content: string;
+}
+
+/** doc_extract tool result: key-value pairs extracted from content. */
+export interface DocExtractData {
+    display_type: 'doc_extract';
+    fields: DocField[];
+}
+
+/** doc_fill_table tool result: table filled from source information. */
+export interface DocFillTableData {
+    display_type: 'doc_fill_table';
+    filled_fields: DocField[];
+    accuracy_hint: number;
+    csv_content: string;
+    columns: string[];
+}
+
 // Union type for all tool result data
 export type ToolResultData =
     | SearchResultsData
@@ -229,7 +263,10 @@ export type ToolResultData =
     | DatabaseQueryData
     | WebSearchResultsData
     | WebFetchResultsData
-    | GrepResultsData;
+    | GrepResultsData
+    | DocInstructionData
+    | DocExtractData
+    | DocFillTableData;
 
 // Action data (from index.vue)
 export interface ActionData {

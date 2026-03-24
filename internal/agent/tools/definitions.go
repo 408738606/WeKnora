@@ -22,6 +22,10 @@ const (
 	// Skills-related tools (only available when skills are enabled)
 	ToolExecuteSkillScript = "execute_skill_script"
 	ToolReadSkill          = "read_skill"
+	// Document intelligence tools (chat-embedded)
+	ToolDocInstruction = "doc_instruction"
+	ToolDocExtract     = "doc_extract"
+	ToolDocFillTable   = "doc_fill_table"
 )
 
 // AvailableTool defines a simple tool metadata used by settings APIs.
@@ -48,6 +52,9 @@ func AvailableToolDefinitions() []AvailableTool {
 		{Name: ToolReadSkill, Label: "读取技能", Description: "按需读取技能内容以学习专业能力"},
 		{Name: ToolExecuteSkillScript, Label: "执行技能脚本", Description: "在沙箱环境中执行技能脚本"},
 		{Name: ToolFinalAnswer, Label: "提交最终回答", Description: "提交最终回答给用户"},
+		{Name: ToolDocInstruction, Label: "文档指令执行", Description: "对文档内容执行自然语言描述的编辑/转换操作"},
+		{Name: ToolDocExtract, Label: "文档信息提取", Description: "从文档文本中提取关键字段和结构化信息"},
+		{Name: ToolDocFillTable, Label: "表格自动填写", Description: "根据文档信息自动填写表格列，结果可在对话框内预览并下载"},
 	}
 }
 
@@ -65,5 +72,8 @@ func DefaultAllowedTools() []string {
 		ToolDataAnalysis,
 		ToolDataSchema,
 		ToolFinalAnswer,
+		ToolDocInstruction,
+		ToolDocExtract,
+		ToolDocFillTable,
 	}
 }

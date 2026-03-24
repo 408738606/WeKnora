@@ -237,6 +237,8 @@ func BuildContainer(container *dig.Container) *dig.Container {
 	must(container.Provide(handler.NewSystemHandler))
 	must(container.Provide(handler.NewMCPServiceHandler))
 	must(container.Provide(handler.NewWebSearchHandler))
+	must(container.Provide(service.NewDocIntelligenceService))
+	must(container.Provide(handler.NewDocIntelligenceHandler))
 	must(container.Provide(handler.NewCustomAgentHandler))
 	must(container.Provide(service.NewSkillService))
 	must(container.Provide(handler.NewSkillHandler))
