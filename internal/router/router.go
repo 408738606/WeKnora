@@ -53,8 +53,9 @@ type RouterParams struct {
 	InitializationHandler *handler.InitializationHandler
 	SystemHandler         *handler.SystemHandler
 	MCPServiceHandler     *handler.MCPServiceHandler
-	WebSearchHandler      *handler.WebSearchHandler
-	FAQHandler            *handler.FAQHandler
+	WebSearchHandler         *handler.WebSearchHandler
+	DocIntelligenceHandler   *handler.DocIntelligenceHandler
+	FAQHandler               *handler.FAQHandler
 	TagHandler            *handler.TagHandler
 	CustomAgentHandler    *handler.CustomAgentHandler
 	SkillHandler          *handler.SkillHandler
@@ -136,6 +137,7 @@ func NewRouter(params RouterParams) *gin.Engine {
 		RegisterSystemRoutes(v1, params.SystemHandler)
 		RegisterMCPServiceRoutes(v1, params.MCPServiceHandler)
 		RegisterWebSearchRoutes(v1, params.WebSearchHandler)
+		RegisterDocIntelligenceRoutes(v1, params.DocIntelligenceHandler)
 		RegisterCustomAgentRoutes(v1, params.CustomAgentHandler)
 		RegisterSkillRoutes(v1, params.SkillHandler)
 		RegisterOrganizationRoutes(v1, params.OrganizationHandler)
@@ -467,6 +469,29 @@ func RegisterWebSearchRoutes(r *gin.RouterGroup, webSearchHandler *handler.WebSe
 	{
 		// Get available providers
 		webSearch.GET("/providers", webSearchHandler.GetProviders)
+	}
+}
+
+// RegisterDocIntelligenceRoutes registers document intelligence routes.
+// Three modules are exposed:
+//
+//	Module 1 – Natural language document operation
+//	Module 2 – Unstructured document information extraction
+//	Module 3 – Table custom data filling
+func RegisterDocIntelligenceRoutes(r *gin.RouterGroup, h *handler.DocIntelligenceHandler) {
+	di := r.Group("/doc-intelligence")
+	{
+		// Module 1: NL instruction → document operation
+		di.POST("/instructions", h.ExecuteInstruction)
+
+		// Module 2: document extraction
+		di.POST("/extract", h.ExtractFromFile)
+		di.GET("/extracted-data", h.ListExtractedData)
+		di.GET("/extracted-data/:id", h.GetExtractedData)
+		di.DELETE("/extracted-data/:id", h.DeleteExtractedData)
+
+		// Module 3: table filling
+		di.POST("/fill-table", h.FillTable)
 	}
 }
 

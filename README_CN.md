@@ -482,6 +482,169 @@ refactor: 重构文档解析模块
 
 [![Contributors](https://contrib.rocks/image?repo=Tencent/WeKnora)](https://github.com/Tencent/WeKnora/graphs/contributors)
 
+---
+
+## 🤖 文档智能模块 – 大语言模型配置教程
+
+文档智能模块（Document Intelligence）包含三个子模块：
+
+| 模块 | 功能说明 |
+|------|---------|
+| **自然语言指令解析与执行** | 用户用自然语言描述对文档的操作（翻译、改写、摘要、格式调整等），系统自动解析并执行 |
+| **非结构化文档信息提取** | 上传 Word / Markdown / Excel / TXT 文件，LLM 自动提取关键字段并持久化到数据库 |
+| **表格自定义数据填写** | 上传表格模板，系统从已提取数据中自动匹配并填写每列字段，返回 CSV 结果 |
+
+### 🔑 前置条件：配置一个 KnowledgeQA 类型的大语言模型
+
+文档智能模块调用已在系统中配置的聊天模型。请先在系统 UI（`初始化 → 模型管理`）或通过 API 添加至少一个 **KnowledgeQA** 类型的模型。
+
+---
+
+### 方案一：使用 OpenAI 兼容接口（推荐）
+
+适用于 OpenAI、Azure OpenAI、DeepSeek、通义千问、Moonshot、SiliconFlow 等所有兼容 OpenAI Chat Completions 格式的服务。
+
+1. 在系统 UI 中进入 **模型管理** → **添加模型**。
+2. 填写以下字段：
+
+   | 字段 | 示例值 |
+   |------|--------|
+   | 名称 | `GPT-4o` |
+   | 类型 | `KnowledgeQA` |
+   | 来源 | `remote` |
+   | Provider | `openai`（或 `generic` 用于其他厂商） |
+   | Base URL | `https://api.openai.com/v1`（按实际填写） |
+   | API Key | `sk-xxxxxxxxxxxxxxxx` |
+   | 模型名称 | `gpt-4o`（按实际模型名填写） |
+
+3. 点击 **保存** 并将该模型设为 **默认**。
+
+---
+
+### 方案二：使用 Ollama（本地离线部署）
+
+适合没有公网 API Key 或对数据隐私有要求的场景。
+
+```bash
+# 安装 Ollama（macOS / Linux）
+curl -fsSL https://ollama.com/install.sh | sh
+
+# 拉取模型（以 qwen2.5:7b 为例）
+ollama pull qwen2.5:7b
+
+# 验证服务可用
+curl http://localhost:11434/api/tags
+```
+
+在系统 UI 中添加模型时，选择来源为 `local`，模型名称填写 `qwen2.5:7b`。
+
+---
+
+### 方案三：环境变量快速配置（适合 Docker Compose 部署）
+
+在 `.env` 文件（参考 `.env.example`）中添加：
+
+```dotenv
+# 文档智能模块默认使用系统内已配置的 KnowledgeQA 模型
+# 若需要在启动时自动注册一个默认模型，可通过初始化接口完成：
+# POST /api/v1/initialization/model
+```
+
+---
+
+### 📡 API 接口说明
+
+所有接口均在认证后调用，使用 `Bearer <JWT>` 或 `X-API-Key: sk-...` 头。
+
+#### 模块一：自然语言文档操作
+
+```http
+POST /api/v1/doc-intelligence/instructions
+Content-Type: multipart/form-data
+
+# 参数
+instruction   string  required  自然语言操作指令，如"翻译成英文"
+file          file    optional  文档文件（.docx/.md/.xlsx/.txt）
+doc_content   string  optional  直接传入文本内容（与 file 二选一）
+model_id      string  optional  指定聊天模型 ID（默认使用租户默认 KnowledgeQA 模型）
+```
+
+**示例响应：**
+```json
+{
+  "success": true,
+  "data": {
+    "log_id": "uuid",
+    "original_instruction": "把这份报告翻译成英文",
+    "parsed_operation": "Translate the entire document from Chinese to English",
+    "original_content": "...",
+    "result_content": "..."
+  }
+}
+```
+
+#### 模块二：文档信息提取
+
+```http
+POST /api/v1/doc-intelligence/extract
+Content-Type: multipart/form-data
+
+# 参数
+file      file    required  待提取文档（.docx/.md/.xlsx/.txt）
+model_id  string  optional  聊天模型 ID
+fields    string  optional  逗号分隔的字段名（如 "姓名,日期,金额"）；留空则自动提取所有关键信息
+```
+
+```http
+GET  /api/v1/doc-intelligence/extracted-data          # 列出所有提取记录
+GET  /api/v1/doc-intelligence/extracted-data/:id      # 获取单条记录
+DELETE /api/v1/doc-intelligence/extracted-data/:id    # 删除记录
+```
+
+#### 模块三：表格自动填写
+
+```http
+POST /api/v1/doc-intelligence/fill-table
+Content-Type: multipart/form-data
+
+# 参数
+file              file    required  表格模板文件（.xlsx/.docx/.csv）
+extracted_data_id string  optional  之前提取记录的 ID（与 doc_content 二选一）
+doc_content       string  optional  直接传入文本作为信息来源
+model_id          string  optional  聊天模型 ID
+```
+
+**示例响应：**
+```json
+{
+  "success": true,
+  "data": {
+    "template_name": "合同模板.xlsx",
+    "filled_fields": [
+      {"name": "甲方", "value": "北京科技有限公司"},
+      {"name": "合同金额", "value": "150,000 元"}
+    ],
+    "csv_content": "甲方,合同金额\n北京科技有限公司,150000 元\n",
+    "accuracy_hint": 0.92
+  }
+}
+```
+
+---
+
+### ❓ 常见问题
+
+**Q：调用时报 "no KnowledgeQA model available"？**  
+A：请先在系统中添加并激活至少一个 **KnowledgeQA** 类型模型。
+
+**Q：文档解析返回空内容？**  
+A：请确认 `docreader` 服务已启动（`docker compose ps` 检查），且文件格式受支持。
+
+**Q：如何提升填写准确率？**  
+A：使用更强的 LLM（如 GPT-4o）；对 `fields` 参数指定精确的字段名；保证文档内容清晰无歧义。
+
+---
+
 ## 📄 许可证
 
 本项目基于 [MIT](./LICENSE) 协议发布。
